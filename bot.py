@@ -1,4 +1,5 @@
 import discord
+from discord import app_commands
 from discord.ext import commands
 import os
 from dotenv import load_dotenv
@@ -11,11 +12,27 @@ intents = discord.Intents.all()
 intents.message_content = True
 intents.members = True
 bot = commands.Bot(command_prefix="!", intents=intents)
+tree = bot.tree
+
+def is_mod(interaction: discord.Interaction) -> bool:
+    return any(role.name == "Discord Management Team" for role in interaction.user.roles)
 
 @bot.event
 async def on_ready():
-    print(f'Logged in as {bot.user}')
+    await tree.sync()
 
+@tree.command(name="say", description="Send a message to a selected channel.")
+@app_commands.check(is_mod)
+@app_commands.describe(channel="Channel to send the message to", message="Message to send")
+async def say_in_channel(interaction: discord.Interaction, channel: discord.TextChannel, message: str):
+    await channel.send(message)
+    await interaction.response.send_message(f"✅ Message sent to {channel.mention}", ephemeral=True)
+
+@say_in_channel.error
+async def say_in_channel_error(interaction: discord.Interaction, error):
+    if isinstance(error, app_commands.CheckFailure):
+        await interaction.response.send_message("🚫 You don't have permission to use this command.", ephemeral=True)
+        
 @bot.command()
 async def say(ctx, *, message: str):
     channel = discord.utils.get(ctx.guild.text_channels, name="📃┃meeting-notices")
