@@ -7,7 +7,7 @@ To run the bot, we'll need to do three things:
 ### 1. Setup the Environment
 First, create a virtual env to install dependancies using this command:
 ```
-python3 -m .venv venv
+python3 -m venv .venv
 ```
 
 Next, we can activate the environment by using:
