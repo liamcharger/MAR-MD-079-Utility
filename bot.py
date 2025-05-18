@@ -179,8 +179,6 @@ async def on_guild_channel_update(before, after):
         changes = []
         if before.name != after.name:
             changes.append(f"✏️ Renamed: `{before.name}` → `{after.name}`")
-        if before.position != after.position:
-            changes.append(f"🔀 Moved position: `{before.position}` → `{after.position}`")
         if changes:
             embed = create_log_embed(
                 title="⚙️ Channel Updated",
@@ -197,7 +195,6 @@ async def clear(ctx, amount: int):
         await ctx.send("❗ You can only delete between 1 and 100 messages.")
         return
     deleted = await ctx.channel.purge(limit=amount + 1)
-    confirm_msg = await ctx.send(f"🧹 Deleted {len(deleted) - 1} messages.", delete_after=5)
     log_channel = discord.utils.get(ctx.guild.text_channels, name="logs")
     if log_channel:
         embed = create_log_embed(
