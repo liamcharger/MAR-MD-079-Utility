@@ -23,9 +23,10 @@ async def on_ready():
 
 @tree.command(name="say", description="Send a message to a selected channel.")
 @app_commands.check(is_mod)
-@app_commands.describe(channel="Channel to send the message to", message="Message to send")
+@app_commands.describe(channel="Channel to send the message to", message="Use '\\n' for new lines")
 async def say_in_channel(interaction: discord.Interaction, channel: discord.TextChannel, message: str):
-    await channel.send(message)
+    formatted_message = message.replace("\\n", "\n")
+    await channel.send(formatted_message)
     await interaction.response.send_message(f"✅ Message sent to {channel.mention}", ephemeral=True)
 
 @say_in_channel.error
