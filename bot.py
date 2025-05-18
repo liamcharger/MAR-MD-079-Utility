@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import os
 from dotenv import load_dotenv
+from datetime import datetime
 
 load_dotenv()
 token = os.getenv("TOKEN")
@@ -9,7 +10,6 @@ token = os.getenv("TOKEN")
 intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
-
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 @bot.event
@@ -21,14 +21,6 @@ async def say(ctx, *, message: str):
     channel = discord.utils.get(ctx.guild.text_channels, name="📃┃meeting-notices")
     print(channel)
     await channel.send(message)
-
-
-import discord
-from discord.ext import commands
-from datetime import datetime
-
-intents = discord.Intents.all()
-bot = commands.Bot(command_prefix="!", intents=intents)
 
 def create_log_embed(title, description, color, author=None, channel=None, message_id=None):
     embed = discord.Embed(
